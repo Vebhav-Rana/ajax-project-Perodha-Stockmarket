@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perodha</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: block;
+      background: #eef1f5;
+    }
+    .sidebar {
+      width: 230px;
+      background: #1f2d3d;
+      color: white;
+      height: 100vh;
+      padding-top: 20px;
+      position: fixed;
+    }
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 22px;
+    }
+    .sidebar .item {
+      padding: 15px 20px;
+      cursor: pointer;
+      transition: 0.3s;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .sidebar .item:hover {
+      background: #2a3b4d;
+    }
+    .content {
+      margin-left: 230px;
+      padding: 30px;
+      width: calc(100% - 230px);
+      transition: 0.3s ease-in-out;
+    }
+    .page {
+      display: none;
+      animation: fadeIn 0.4s;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);} 
+      to {opacity: 1; transform: translateY(0);} 
+    }
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Top Navbar -->
+<div class="navbar" style="width:100%; background:#1f2d3d; color:white; padding:15px 20px; position:fixed; top:0; left:0; display:flex; justify-content:flex-start; gap:25px; align-items:center; z-index:10;">
+  <h2 style="margin:0; margin-right:40px; font-size:22px;">Perodha</h2>
+  <div class="nav-item" onclick="openPage('home')" style="cursor:pointer;">Home</div>
+  <div class="nav-item" onclick="openPage('ajax')" style="cursor:pointer;">Perodha Page Reload</div>
+  <div class="nav-item" onclick="openPage('stocks')" style="cursor:pointer;">Trending Stocks</div>
+  <div class="nav-item" onclick="openPage('buysell')" style="cursor:pointer;">Buy/Sell</div>
+  <div class="nav-item" onclick="openPage('ipos')" style="cursor:pointer;">Upcoming IPOs</div>
+  <div class="nav-item" onclick="openPage('profile')" style="cursor:pointer;">Stock Profile</div>
+  <div class="nav-item" onclick="openPage('fo')" style="cursor:pointer;">F&O</div>
+  <div class="nav-item" onclick="openPage('search')" style="cursor:pointer;">Search</div>
+  <div class="nav-item" onclick="openPage('mf')" style="cursor:pointer;">Mutual Funds</div>
+  <div class="nav-item" onclick="openPage('gold')" style="cursor:pointer;">Gold/Bonds</div>
+</div>
+
+<div class="content" style="padding-top:90px;"><div id="home" class="page" style="display:block;">
+  <div class="card">
+    <h2>Welcome</h2>
+    <p>Select any module from the left menu.</p>
+  </div>
+</div>
+
+<div id="ajax" class="page">
+  <div class="card">
+    <h2>Perodha Page Reload</h2>
+    <p>Click the button to load data dynamically using AJAX.</p>
+    <button onclick="loadData()">Load Data</button>
+    <div id="dataBox" style="margin-top:20px; padding:20px; background:#fff; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">Response will appear here...</div>
+  </div>
+</div>
+
+<div id="stocks" class="page">
+  <div class="card">
+    <h2>Trending Stocks</h2>
+    <p>Click to load trending stock data using AJAX.</p>
+    <button onclick="loadStocks()">Load Trending Stocks</button>
+    <div id="stocksBox" style="margin-top:20px; padding:20px; background:#fff; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">Stock data will appear here...</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function openPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+}
+
+function loadData() {
+  const xhr = new XMLHttpRequest();
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+      const box = document.getElementById('dataBox');
+      if (xhr.status === 200) {
+        box.innerHTML = `<strong>Success (200):</strong><br>${xhr.responseText}`;
+      } else {
+        box.innerHTML = `Error ${xhr.status}: ${xhr.statusText}`;
+      }
+    }
+  };
+
+  xhr.open('GET', 'https://jsonplaceholder.typicode.com/posts/1', true);
+  xhr.send();
+}
+
+function loadStocks() {
+  const xhr = new XMLHttpRequest();
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+      const box = document.getElementById('stocksBox');
+      if (xhr.status === 200) {
+        const data = JSON.parse(xhr.responseText);
+        box.innerHTML = `<strong>Trending Stock:</strong><br>Name: ${data.company}<br>Price: ${data.price}<br>Change: ${data.change}`;
+      } else {
+        box.innerHTML = `Error ${xhr.status}: ${xhr.statusText}`;
+      }
+    }
+  };
+
+  xhr.open('GET', 'https://mocki.io/v1/0a3b9a15-aab6-4c56-9a9d-aa6a4b4e4d13', true);
+  xhr.send();
+}
+</script>
+
+<!-- Buy/Sell Page -->
+<div id="buysell" class="page">
+  <div class="card">
+    <h2>Buy / Sell</h2>
+    <p>Place stock buy or sell orders dynamically.</p>
+  </div>
+</div>
+
+<!-- Upcoming IPOs Page -->
+<div id="ipos" class="page">
+  <div class="card">
+    <h2>Upcoming IPOs</h2>
+    <p>View upcoming IPO listings using AJAX.</p>
+  </div>
+</div>
+
+<!-- Stock Profile Page -->
+<div id="profile" class="page">
+  <div class="card">
+    <h2>Stock Profile</h2>
+    <p>Load detailed stock information.</p>
+  </div>
+</div>
+
+<!-- F&O Page -->
+<div id="fo" class="page">
+  <div class="card">
+    <h2>F&O</h2>
+    <p>Options and Futures data loading via AJAX.</p>
+  </div>
+</div>
+
+<!-- Search Page -->
+<div id="search" class="page">
+  <div class="card">
+    <h2>Search Stocks</h2>
+    <p>Search any stock dynamically.</p>
+  </div>
+</div>
+
+<!-- Mutual Funds Page -->
+<div id="mf" class="page">
+  <div class="card">
+    <h2>Mutual Funds</h2>
+    <p>Mutual fund NAV and category data.</p>
+  </div>
+</div>
+
+<!-- Gold/Bonds Page -->
+<div id="gold" class="page">
+  <div class="card">
+    <h2>Gold & Bonds</h2>
+    <p>Gold price & government bond data using AJAX.</p>
+  </div>
+</div>
+
+</body>
+</html>

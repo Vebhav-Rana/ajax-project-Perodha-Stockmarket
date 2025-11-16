@@ -1,0 +1,9 @@
+{
+  "stocks": [
+    { "symbol": "TCS", "company": "Tata Consultancy Services", "price": 3450, "change": "+1.2%", "volume": "12.3M" },
+    { "symbol": "INFY", "company": "Infosys Ltd", "price": 1560, "change": "-0.4%", "volume": "9.1M" },
+    { "symbol": "HDFCBANK", "company": "HDFC Bank", "price": 1542, "change": "+0.8%", "volume": "7.4M" },
+    { "symbol": "RELIANCE", "company": "Reliance Industries", "price": 2510, "change": "+0.3%", "volume": "18.2M" },
+    { "symbol": "ITC", "company": "ITC Ltd", "price": 456, "change": "+0.6%", "volume": "5.8M" }
+  ]
+}

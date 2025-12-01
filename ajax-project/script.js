@@ -1,60 +1,84 @@
-// NAVIGATION LOGIC
+// PAGE SWITCHING
 function showPage(id) {
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    let pages = document.querySelectorAll(".page");
+
+    // Hide all pages
+    pages.forEach(function(page) {
+        page.classList.remove("active");
+    });
+
+    // Show selected page
     document.getElementById(id).classList.add("active");
 }
 
-// TRENDING STOCKS AJAX
-document.getElementById("loadStocksBtn").addEventListener("click", loadTrendingStocks);
+// BUTTON CLICK → LOAD STOCKS
+document.getElementById("loadStocksBtn").onclick = function () {
+    loadTrendingStocks();
+};
 
+// AJAX FUNCTION
 function loadTrendingStocks() {
-    const output = document.getElementById("stockResult");
-    output.innerHTML = "<p>Loading data...</p>";
+    let output = document.getElementById("stockResult");
+    output.innerHTML = "Loading data...";
 
-    const xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
 
+    // Step 1: Set URL & Method
     xhr.open("GET", "trending.json", true);
 
+    // Step 2: Callback
     xhr.onreadystatechange = function () {
-        console.log("ReadyState:", xhr.readyState);
 
+        // ReadyState 4 → Response Arrived
         if (xhr.readyState === 4) {
+
+            // Status 200 → SUCCESS
             if (xhr.status === 200) {
-                const data = JSON.parse(xhr.responseText);
+                let data = JSON.parse(xhr.responseText);
                 let html = "<h2>Top Trending Stocks</h2>";
 
-                html += `<table border="1" width="100%" cellpadding="10" style="border-collapse:collapse;">
-                            <tr>
-                                <th>Symbol</th>
-                                <th>Company</th>
-                                <th>Price (₹)</th>
-                                <th>Change</th>
-                                <th>Volume</th>
-                            </tr>`;
+                html += `
+                    <table border="1" width="100%" cellpadding="10" style="border-collapse:collapse;">
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Company</th>
+                            <th>Price (₹)</th>
+                            <th>Change</th>
+                            <th>Volume</th>
+                        </tr>
+                `;
 
-                data.stocks.forEach(stock => {
+                data.stocks.forEach(function(stock) {
+
+                    let color = (stock.change.startsWith("+")) ? "lightgreen" : "red";
+
                     html += `
                         <tr>
                             <td>${stock.symbol}</td>
                             <td>${stock.company}</td>
                             <td>₹${stock.price}</td>
-                            <td style="color:${stock.change.startsWith('+') ? 'lightgreen' : 'red'};">
-                                ${stock.change}
-                            </td>
+                            <td style="color:${color};">${stock.change}</td>
                             <td>${stock.volume}</td>
-                        </tr>`;
+                        </tr>
+                    `;
                 });
 
                 html += "</table>";
                 output.innerHTML = html;
+            }
 
-            } else if (xhr.status === 404) {
-                output.innerHTML = "<p style='color:red;'>Error 404: File not found.</p>";
-            } else {
-                output.innerHTML = `<p style='color:red;'>Error: Status ${xhr.status}</p>`;
+            // Status 404 → FILE NOT FOUND
+            else if (xhr.status === 404) {
+                output.innerHTML = "Error 404: File not found.";
+            }
+
+            // Any other status
+            else {
+                output.innerHTML = "Error: Status " + xhr.status;
             }
         }
     };
 
+    // Step 3: Send Request
     xhr.send();
 }
